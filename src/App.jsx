@@ -217,6 +217,7 @@ export default function App() {
               <Skills />
               <Timeline />
               <Testimonials />
+              <Collaborazioni />
               <FAQ />
             </main>
             <Footer />
@@ -239,7 +240,7 @@ function FloatingNav() {
   const bg = useTransform(scrollY, [0, 100], ["rgba(5,5,7,0)", "rgba(13,13,19,0.7)"]);
   const border = useTransform(scrollY, [0, 100], ["rgba(30,30,38,0)", "rgba(30,30,38,1)"]);
 
-  const links = ["Servizi", "Skills"];
+  const links = ["Servizi", "Skills", "Collaborazioni"];
 
   return (
     <motion.header
@@ -670,6 +671,51 @@ function Testimonials() {
                 <div className="font-semibold text-white">Lucadomenico</div>
                 <div className="text-xs text-[#8f8fa3]">Sviluppatore web</div>
               </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Collaborazioni() {
+  const options = [
+    {
+      title: "Landing Page",
+      desc: "Un sito professionale pensato per presentare il tuo brand, comunicare chiaramente e generare contatti reali.",
+      badge: "Brand presence",
+    },
+    {
+      title: "Web App",
+      desc: "Soluzioni digitali più complesse, dove logica, UX e automazioni si uniscono in un prodotto completo.",
+      badge: "Product build",
+    },
+    {
+      title: "Collaborazione su misura",
+      desc: "Per progetti custom, obiettivi specifici e una soluzione progettata in base alle tue esigenze reali.",
+      badge: "Custom work",
+    },
+  ];
+
+  return (
+    <section id="collaborazioni" className="py-32 px-6 max-w-6xl mx-auto">
+      <SectionHeader title="Collaborazioni" subtitle="Approccio" center />
+      <div className="mt-16 grid md:grid-cols-3 gap-6">
+        {options.map((item, i) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            className="group relative h-full overflow-hidden rounded-2xl border border-[#1e1e26] bg-[#0d0d13] p-8 transition-all duration-300 hover:border-[#22d3ee]/50 hover:shadow-[0_18px_50px_rgba(34,211,238,0.12)] glass-panel"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#22d3ee]/8 via-transparent to-[#8b5cf6]/8 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="relative z-10">
+              <span className="inline-flex rounded-full border border-[#22d3ee]/30 bg-[#22d3ee]/5 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#22d3ee]">{item.badge}</span>
+              <h3 className="mt-6 text-xl font-display font-semibold text-white">{item.title}</h3>
+              <p className="mt-4 text-sm leading-relaxed text-[#8f8fa3]">{item.desc}</p>
             </div>
           </motion.div>
         ))}
