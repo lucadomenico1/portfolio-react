@@ -476,7 +476,7 @@ function SocialProof() {
 
   return (
     <section className="py-16 border-y border-[#1e1e26] bg-[#050507]/50 backdrop-blur-xl relative z-20">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
         {stats.map((s, i) => (
           <motion.div
             key={i}
@@ -485,12 +485,12 @@ function SocialProof() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
             whileHover={{ y: -6, scale: 1.01 }}
-            className="group"
+            className="group text-center sm:text-left"
           >
-            <div className="font-display text-4xl sm:text-5xl font-bold text-[#f5f5f7] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#8b5cf6] group-hover:to-[#22d3ee] transition-all">
+            <div className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#f5f5f7] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#8b5cf6] group-hover:to-[#22d3ee] transition-all">
               <Counter from={0} to={s.num} />{s.suffix}
             </div>
-            <div className="mt-2 text-sm text-[#8f8fa3] uppercase tracking-wider">{s.label}</div>
+            <div className="mt-2 text-[10px] sm:text-sm text-[#8f8fa3] uppercase tracking-wider">{s.label}</div>
           </motion.div>
         ))}
         
@@ -498,7 +498,7 @@ function SocialProof() {
            <motion.div 
              animate={{ x: ["0%", "-50%"] }} 
              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-             className="flex gap-8 whitespace-nowrap text-[#8f8fa3] font-code text-sm"
+             className="flex gap-8 whitespace-nowrap text-[#8f8fa3] font-code text-xs sm:text-sm"
            >
              <span>React</span><span>Tailwind</span><span>Node.js</span><span>Framer</span><span>Flutter</span>
              <span>React</span><span>Tailwind</span><span>Node.js</span><span>Framer</span><span>Flutter</span>
@@ -830,7 +830,7 @@ function Footer() {
             <a href="https://www.linkedin.com/in/lucadomenico-chiappetta/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#8b5cf6]/50 hover:text-white transition-colors flex items-center justify-center">
               <LinkedInIcon className="w-4 h-4" />
             </a>
-            <a href="https://instagram.com/_.lucad_" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
+            <a href="https://instagram.com/_.lucad___" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
               <InstagramIcon className="w-4 h-4" />
             </a>
             <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#25D366]/50 hover:text-white transition-colors flex items-center justify-center">
