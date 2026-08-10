@@ -194,6 +194,29 @@ export default function App() {
         .float-slow {
           animation: floatSlow 7s ease-in-out infinite;
         }
+
+        @media (max-width: 768px) {
+          .hero-shell {
+            padding-top: 6.5rem;
+            padding-bottom: 4rem;
+          }
+
+          .hero-title {
+            font-size: clamp(2.7rem, 11vw, 4.2rem);
+            line-height: 0.96;
+            letter-spacing: -0.05em;
+          }
+
+          .hero-orb {
+            filter: blur(80px) !important;
+            opacity: 0.18 !important;
+            transform: scale(0.8) !important;
+          }
+
+          .float-slow {
+            animation-duration: 12s;
+          }
+        }
         
       `}</style>
 
@@ -295,25 +318,25 @@ function Hero() {
   const { x, y } = useMousePosition();
   
   return (
-    <section className="relative min-h-screen pt-32 pb-20 px-6 flex items-center overflow-hidden">
+    <section className="relative min-h-screen pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 flex items-center overflow-hidden hero-shell">
       <div className="absolute inset-0 bg-grid opacity-30" />
       <motion.div
-        className="absolute top-1/4 -left-32 w-96 h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[150px] opacity-30"
+        className="hero-orb absolute top-1/4 -left-32 w-56 h-56 sm:w-96 sm:h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[120px] sm:blur-[150px] opacity-20 sm:opacity-30"
         animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
-        className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#22d3ee] rounded-full mix-blend-screen filter blur-[150px] opacity-30"
+        className="hero-orb absolute bottom-1/4 -right-32 w-56 h-56 sm:w-96 sm:h-96 bg-[#22d3ee] rounded-full mix-blend-screen filter blur-[120px] sm:blur-[150px] opacity-20 sm:opacity-30"
         animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
-        className="absolute left-1/2 top-20 h-64 w-64 rounded-full border border-[#8b5cf6]/30 bg-[#8b5cf6]/5 blur-3xl"
+        className="hero-orb absolute left-1/2 top-20 h-40 w-40 sm:h-64 sm:w-64 rounded-full border border-[#8b5cf6]/30 bg-[#8b5cf6]/5 blur-3xl"
         animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.8, 0.4] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute right-[12%] top-[18%] h-32 w-32 rounded-full border border-[#22d3ee]/30 bg-[#22d3ee]/5 blur-3xl"
+        className="hero-orb absolute right-[12%] top-[18%] h-20 w-20 sm:h-32 sm:w-32 rounded-full border border-[#22d3ee]/30 bg-[#22d3ee]/5 blur-3xl"
         animate={{ scale: [1.1, 1.3, 1.1], opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -333,7 +356,7 @@ function Hero() {
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#22d3ee] mb-6 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
               <Sparkles size={14} /> Frontend • UX • Web
             </span>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+            <h1 className="hero-title font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
               Creo <span className="text-gradient">esperienze</span><br />
               digitali che<br />
               aiutano a crescere.
@@ -344,7 +367,7 @@ function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-6 text-lg text-[#8f8fa3] max-w-lg leading-relaxed"
+            className="mt-6 text-base sm:text-lg text-[#8f8fa3] max-w-lg leading-relaxed"
           >
             Sono Lucadomenico, un giovane sviluppatore che combina logica, design e cura dei dettagli per creare siti e applicazioni facili da usare, veloci e davvero efficaci.
           </motion.p>
