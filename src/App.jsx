@@ -1,0 +1,818 @@
+import React, { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  animate,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useScroll,
+} from "framer-motion";
+import {
+  Code2,
+  Server,
+  Gauge,
+  Mail,
+  Star,
+  ChevronDown,
+  ArrowRight,
+  Files,
+  Search,
+  GitBranch,
+  Sparkles,
+} from "lucide-react";
+
+/* =============================================================================
+   HOOKS PERSONALIZZATI
+============================================================================= */
+
+function useMousePosition() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const updateMousePosition = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
+  return mousePosition;
+}
+
+function useTypingEffect(text, speed = 30, delay = 0) {
+  const [displayedText, setDisplayedText] = useState("");
+  const [start, setStart] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setStart(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!start) return;
+    let i = 0;
+    const typingInterval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayedText(text.substring(0, i + 1));
+        i++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, speed);
+    return () => clearInterval(typingInterval);
+  }, [text, speed, start]);
+
+  return displayedText;
+}
+
+function GitHubIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.27 3.44 9.76 8.2 11.34.6.11.82-.26.82-.58v-2.02c-3.34.72-4.04-1.42-4.04-1.42-.54-1.38-1.34-1.75-1.34-1.75-1.1-.75.08-.74.08-.74 1.22.09 1.87 1.25 1.87 1.25 1.08 1.85 2.81 1.31 3.5.99.11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.4 1.24-3.26-.12-.3-.54-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.85 1.23 1.94 1.23 3.26 0 4.63-2.8 5.65-5.48 5.95.43.38.81 1.1.81 2.22v3.3c0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5Z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M6.94 8.5A1.56 1.56 0 1 1 6.94 5.4a1.56 1.56 0 0 1 0 3.1ZM5.5 10.3h2.8v7.7H5.5v-7.7Zm4.7 0h2.68v1.05h.04c.37-.7 1.28-1.43 2.63-1.43 2.81 0 3.33 1.85 3.33 4.25V18h-2.8v-7.07c0-1.68-.03-3.84-2.33-3.84-2.34 0-2.7 1.83-2.7 3.72V18h-2.8v-7.7Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12.04 2.08C6.53 2.08 2.11 6.39 2.11 11.8c0 1.82.49 3.58 1.42 5.13L2 22l5.27-1.5a9.58 9.58 0 0 0 4.78 1.3h.01c5.51 0 9.93-4.31 9.93-9.7s-4.4-9.72-9.99-9.72Zm5.68 13.53c-.24.67-1.39 1.27-1.92 1.35-.49.07-1.12.08-3.62-.77-3.07-1.05-5.05-3.7-5.2-3.87-.15-.17-1.25-1.67-1.25-3.18 0-1.52.8-2.27 1.09-2.58.29-.3.62-.38.82-.38h.59c.19 0 .45.01.71.54.29.6.99 2.1 1.08 2.24.09.15.15.33.03.53-.12.2-.18.33-.36.52-.18.19-.38.43-.54.59-.18.18-.37.38-.16.74.2.35 1.06 1.74 2.28 2.82 1.57 1.4 2.9 1.83 3.31 2.04.42.22.67.18.91-.11.25-.3.98-1.15 1.24-1.54.26-.4.53-.33.9-.2.38.13 2.4 1.13 2.82 1.34.42.21.7.31.82.49.12.18.12 1.04-.13 1.72Z" />
+    </svg>
+  );
+}
+
+/* =============================================================================
+   COMPONENTI CORE E UI
+============================================================================= */
+
+function Loader({ onComplete }) {
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, filter: "blur(10px)" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+      className="fixed inset-0 z-[200] bg-[#050507] flex flex-col items-center justify-center"
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="font-code text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8b5cf6] via-[#22d3ee] to-[#f472b6]"
+      >
+        {"<Lucadomenico />"}
+      </motion.div>
+      <motion.div className="w-48 h-[2px] bg-[#1e1e26] mt-6 rounded-full overflow-hidden relative">
+        <motion.div
+          initial={{ x: "-100%" }}
+          animate={{ x: "0%" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          onAnimationComplete={onComplete}
+          className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee]"
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* =============================================================================
+   APP PRINCIPALE
+============================================================================= */
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; cursor: default; background: #050507; }
+        
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-code { font-family: 'JetBrains Mono', monospace; }
+        
+        .bg-noise {
+          position: fixed; inset: 0; z-index: -1; opacity: 0.04; pointer-events: none;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .bg-grid {
+          background-size: 40px 40px;
+          background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+          mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+        
+        .text-gradient {
+          background: linear-gradient(90deg, #8b5cf6, #22d3ee, #f472b6);
+          -webkit-background-clip: text; color: transparent;
+        }
+
+        .glass-panel {
+          background: rgba(13, 13, 19, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          box-shadow: 0 24px 60px rgba(11, 11, 17, 0.45);
+        }
+
+        .soft-glow {
+          box-shadow: 0 0 30px rgba(139, 92, 246, 0.18);
+        }
+
+        .hover-lift {
+          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .hover-lift:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 22px 50px rgba(139, 92, 246, 0.15);
+        }
+
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
+        }
+
+        .float-slow {
+          animation: floatSlow 7s ease-in-out infinite;
+        }
+        
+      `}</style>
+
+      <AnimatePresence>
+        {loading ? (
+          <Loader key="loader" onComplete={() => setTimeout(() => setLoading(false), 200)} />
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="min-h-screen text-[#f5f5f7] antialiased selection:bg-[#8b5cf6]/30 relative overflow-x-hidden"
+          >
+            <div className="bg-noise" />
+            <FloatingNav />
+            <main>
+              <Hero />
+              <SocialProof />
+              <Services />
+              <Skills />
+              <Timeline />
+              <Testimonials />
+              <Pricing />
+              <FAQ />
+            </main>
+            <Footer />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/* =============================================================================
+   SEZIONI DELLA PAGINA
+============================================================================= */
+
+function FloatingNav() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 100], [0, -10]);
+  const width = useTransform(scrollY, [0, 100], ["100%", "85%"]);
+  const br = useTransform(scrollY, [0, 100], ["0px", "24px"]);
+  const bg = useTransform(scrollY, [0, 100], ["rgba(5,5,7,0)", "rgba(13,13,19,0.7)"]);
+  const border = useTransform(scrollY, [0, 100], ["rgba(30,30,38,0)", "rgba(30,30,38,1)"]);
+
+  const links = ["Servizi", "Skills", "Prezzi"];
+
+  return (
+    <motion.header
+      style={{ y, width, borderRadius: br, backgroundColor: bg, borderColor: border }}
+      className="fixed top-0 inset-x-0 mx-auto z-50 backdrop-blur-xl border-b transition-all duration-300 mt-0 sm:mt-4 max-w-6xl"
+    >
+      <div className="px-6 h-16 flex items-center justify-between">
+        <a href="#" className="font-code font-bold text-lg text-[#f5f5f7] group">
+          <span className="text-[#8b5cf6] group-hover:text-[#22d3ee] transition-colors">{"<"}</span>
+          Lucadomenico
+          <span className="text-[#22d3ee] group-hover:text-[#f472b6] transition-colors">{" />"}</span>
+        </a>
+        <nav className="hidden md:flex gap-8 text-sm text-[#8f8fa3]">
+          {links.map((l) => (
+            <a key={l} href={`#${l.toLowerCase()}`} className="hover:text-[#f5f5f7] transition-colors relative group">
+              {l}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] transition-all group-hover:w-full" />
+            </a>
+          ))}
+        </nav>
+        <div className="hidden sm:flex items-center gap-3">
+          <a
+            href="mailto:lucadomenico.chiappetta@gmail.com"
+            className="inline-flex relative overflow-hidden group bg-white/5 border border-white/10 px-5 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-all"
+          >
+            <span className="relative z-10 text-gradient group-hover:text-white transition-colors">Email</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] opacity-0 group-hover:opacity-100 transition-opacity blur-lg" />
+          </a>
+          <a
+            href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto."
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex relative overflow-hidden group bg-white/5 border border-white/10 px-5 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-all"
+          >
+            <span className="relative z-10 text-gradient group-hover:text-white transition-colors">WhatsApp</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] opacity-0 group-hover:opacity-100 transition-opacity blur-lg" />
+          </a>
+          <a
+            href="#contatti"
+            className="inline-flex relative overflow-hidden group bg-white/5 border border-white/10 px-5 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-all"
+          >
+            <span className="relative z-10 text-gradient group-hover:text-white transition-colors">Let's Talk</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] opacity-0 group-hover:opacity-100 transition-opacity blur-lg" />
+          </a>
+        </div>
+      </div>
+    </motion.header>
+  );
+}
+
+function Hero() {
+  const { x, y } = useMousePosition();
+  
+  return (
+    <section className="relative min-h-screen pt-32 pb-20 px-6 flex items-center overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-30" />
+      <motion.div
+        className="absolute top-1/4 -left-32 w-96 h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[150px] opacity-30"
+        animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#22d3ee] rounded-full mix-blend-screen filter blur-[150px] opacity-30"
+        animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute left-1/2 top-20 h-64 w-64 rounded-full border border-[#8b5cf6]/30 bg-[#8b5cf6]/5 blur-3xl"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.8, 0.4] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute right-[12%] top-[18%] h-32 w-32 rounded-full border border-[#22d3ee]/30 bg-[#22d3ee]/5 blur-3xl"
+        animate={{ scale: [1.1, 1.3, 1.1], opacity: [0.5, 0.8, 0.5] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+      
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+        style={{ background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(139,92,246,0.1), transparent 40%)` }}
+      />
+
+      <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
+        <div>
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#22d3ee] mb-6 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+              <Sparkles size={14} /> Frontend • UX • Web
+            </span>
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+              Creo <span className="text-gradient">esperienze</span><br />
+              digitali che<br />
+              aiutano a crescere.
+            </h1>
+          </motion.div>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-6 text-lg text-[#8f8fa3] max-w-lg leading-relaxed"
+          >
+            Sono Lucadomenico, un giovane sviluppatore che combina logica, design e cura dei dettagli per creare siti e applicazioni facili da usare, veloci e davvero efficaci.
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-10 flex flex-wrap gap-4"
+          >
+            <motion.a
+              href="#contatti"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative inline-flex items-center gap-2 bg-[#f5f5f7] text-[#050507] px-6 py-3 rounded-xl font-medium shadow-[0_10px_30px_rgba(255,255,255,0.15)]"
+            >
+              Contattami
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </motion.a>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.7 }}
+              className="mt-6 flex items-center gap-3 text-xs uppercase tracking-[0.22em] text-[#8f8fa3]"
+            >
+              <span className="block h-px w-10 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee]" />
+              Scroll
+            </motion.div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, rotateY: -15, rotateX: 10 }}
+          animate={{ opacity: 1, scale: 1, rotateY: 0, rotateX: 0 }}
+          transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+          style={{ transformPerspective: 1000 }}
+          className="float-slow relative rounded-xl border border-[#1e1e26] bg-[#09090b] shadow-2xl shadow-[#8b5cf6]/10 overflow-hidden hidden md:block"
+        >
+          <div className="flex items-center justify-between px-4 py-2 bg-[#18181b] border-b border-[#27272a]">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#ed6a5e]" />
+              <div className="w-3 h-3 rounded-full bg-[#f4bf4f]" />
+              <div className="w-3 h-3 rounded-full bg-[#61c554]" />
+            </div>
+            <div className="text-xs font-code text-[#a1a1aa]">App.tsx — Profile</div>
+            <div className="w-10" />
+          </div>
+          
+          <div className="flex h-[350px]">
+            <div className="w-12 bg-[#18181b] border-r border-[#27272a] flex flex-col items-center py-4 gap-6 text-[#71717a]">
+              <Files size={20} className="text-white" />
+              <Search size={20} />
+              <GitBranch size={20} />
+            </div>
+            
+            <div className="flex-1 p-4 font-code text-sm leading-6 text-[#d4d4d8] overflow-hidden relative">
+              <div className="absolute left-0 top-4 bottom-4 w-10 text-right pr-4 text-[#52525b] select-none space-y-0">
+                {[...Array(10)].map((_, i) => <div key={i}>{i + 1}</div>)}
+              </div>
+              <div className="pl-8">
+                <CodeLine text="import { Developer } from './types';" delay={500} />
+                <CodeLine text="" delay={1000} />
+                <CodeLine text="const luca: Developer = {" delay={1200} />
+                <CodeLine text="  role: 'Full-Stack Developer'," delay={1800} indent={1} />
+                <CodeLine text="  skills: ['React', 'Node.js', 'Tailwind']," delay={2500} indent={1} />
+                <CodeLine text="  status: 'Building cool things'," delay={3200} indent={1} />
+                <CodeLine text="  coffeeCups: Infinity," delay={3800} indent={1} />
+                <CodeLine text="};" delay={4500} />
+                <CodeLine text="" delay={4800} />
+                <CodeLine text="export default luca;" delay={5200} />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function CodeLine({ text, delay, indent = 0 }) {
+  const typed = useTypingEffect(text, 40, delay);
+  const colorize = (str) => {
+    return str
+      .replace(/import|from|const|export|default/g, '<span class="text-[#c678dd]">$&</span>')
+      .replace(/Developer/g, '<span class="text-[#e5c07b]">$&</span>')
+      .replace(/'[^']*'/g, '<span class="text-[#98c379]">$&</span>')
+      .replace(/Infinity/g, '<span class="text-[#d19a66]">$&</span>')
+      .replace(/[{}[\]]/g, '<span class="text-[#abb2bf]">$&</span>')
+      .replace(/role:|skills:|status:|coffeeCups:/g, '<span class="text-[#e06c75]">$&</span>');
+  };
+
+  return (
+    <div style={{ marginLeft: `${indent * 1.5}rem` }}>
+      <span dangerouslySetInnerHTML={{ __html: colorize(typed) }} />
+      {typed === text ? "" : <span className="animate-pulse text-[#22d3ee]">|</span>}
+    </div>
+  );
+}
+
+function SocialProof() {
+  const stats = [
+    { num: 24, label: "Mesi di studio", suffix: "+" },
+    { num: 3, label: "Aree di specializzazione", suffix: "" },
+    { num: 14, label: "Tecnologie", suffix: "" },
+  ];
+
+  return (
+    <section className="py-16 border-y border-[#1e1e26] bg-[#050507]/50 backdrop-blur-xl relative z-20">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+        {stats.map((s, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="group"
+          >
+            <div className="font-display text-4xl sm:text-5xl font-bold text-[#f5f5f7] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#8b5cf6] group-hover:to-[#22d3ee] transition-all">
+              <Counter from={0} to={s.num} />{s.suffix}
+            </div>
+            <div className="mt-2 text-sm text-[#8f8fa3] uppercase tracking-wider">{s.label}</div>
+          </motion.div>
+        ))}
+        
+        <div className="col-span-2 md:col-span-1 flex items-center overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+           <motion.div 
+             animate={{ x: ["0%", "-50%"] }} 
+             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+             className="flex gap-8 whitespace-nowrap text-[#8f8fa3] font-code text-sm"
+           >
+             <span>React</span><span>Tailwind</span><span>Node.js</span><span>Framer</span><span>Flutter</span>
+             <span>React</span><span>Tailwind</span><span>Node.js</span><span>Framer</span><span>Flutter</span>
+           </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Counter({ from, to }) {
+  const [count, setCount] = useState(from);
+  const nodeRef = useRef(null);
+  const inView = useInView(nodeRef, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (inView) {
+      const controls = animate(from, to, {
+        duration: 2,
+        onUpdate(value) { setCount(Math.floor(value)); },
+      });
+      return () => controls.stop();
+    }
+  }, [inView, from, to]);
+
+  return <span ref={nodeRef}>{count}</span>;
+}
+
+function Services() {
+  const srv = [
+    { icon: Code2, title: "Sviluppo Frontend", desc: "Interfacce pixel-perfect, accessibili e animate." },
+    { icon: Server, title: "Logica Backend", desc: "Architetture solide, database e API RESTful veloci." },
+    { icon: Gauge, title: "Ottimizzazione", desc: "Core Web Vitals e performance di caricamento." }
+  ];
+
+  return (
+    <section id="servizi" className="py-32 px-6 max-w-6xl mx-auto">
+      <SectionHeader title="Expertise" subtitle="Servizi" />
+      <div className="mt-16 grid md:grid-cols-3 gap-6">
+        {srv.map((s, i) => (
+          <TiltCard key={i} delay={i * 0.1}>
+            <div className="p-8 h-full rounded-2xl bg-[#0d0d13] border border-[#1e1e26] relative overflow-hidden group hover:border-[#8b5cf6]/50 transition-colors glass-panel hover-lift">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#8b5cf6]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <s.icon size={28} className="text-[#22d3ee] mb-6" />
+              <h3 className="text-xl font-display font-semibold mb-3">{s.title}</h3>
+              <p className="text-[#8f8fa3] leading-relaxed text-sm">{s.desc}</p>
+            </div>
+          </TiltCard>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TiltCard({ children, delay }) {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]));
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-5, 5]));
+
+  function handleMouse(e) {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay }}
+      onMouseMove={handleMouse}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformPerspective: 1000 }}
+      className="h-full"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Skills() {
+  const tools = ["HTML", "Java", "C", "React", "JavaScript", "Flutter", "Node.js", "Tailwind CSS", "Figma", "Git", "SQL"];
+  
+  return (
+    <section id="skills" className="py-32 bg-[#050507] border-y border-[#1e1e26] relative overflow-hidden">
+       <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
+          <SectionHeader title="Tech Stack" subtitle="Tecnologie" center />
+          <div className="mt-16 flex flex-wrap justify-center gap-4">
+             {tools.map((t, i) => (
+                <motion.div
+                  key={t}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
+                  whileHover={{ y: -5, scale: 1.05 }}
+                  className="px-6 py-3 bg-[#0d0d13] border border-[#1e1e26] rounded-full text-sm font-code hover:border-[#22d3ee]/50 transition-all soft-glow"
+                >
+                  {t}
+                </motion.div>
+             ))}
+          </div>
+       </div>
+    </section>
+  );
+}
+
+function Timeline() {
+  const events = [
+    { year: "2023", title: "Inizio Studi Universitari", desc: "Iscrizione a Informatica (L-31) per approfondire lo sviluppo software." },
+    { year: "2024", title: "Primi esperimenti pratici", desc: "Approfondimento su applicazioni web e strumenti moderni per lo sviluppo." },
+    { year: "Oggi", title: "Aspirante Programmatore", desc: "Studio, sviluppo e miglioro costantemente le mie competenze tecniche." },
+  ];
+
+  return (
+    <section id="timeline" className="py-32 px-6 max-w-4xl mx-auto relative">
+      <SectionHeader title="Il mio percorso" subtitle="Timeline" />
+      <div className="mt-20 relative pl-8 border-l-2 border-[#1e1e26]">
+         {events.map((e, i) => (
+           <motion.div 
+             key={i}
+             initial={{ opacity: 0, x: -50 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true, margin: "-100px" }}
+             transition={{ duration: 0.5, delay: i * 0.1 }}
+             className="mb-12 relative"
+           >
+             <div className="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-[#050507] border-2 border-[#8b5cf6] flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
+             </div>
+             <div className="font-code text-[#8b5cf6] mb-1">{e.year}</div>
+             <h3 className="text-xl font-display font-semibold mb-2">{e.title}</h3>
+             <p className="text-[#8f8fa3] text-sm leading-relaxed">{e.desc}</p>
+           </motion.div>
+         ))}
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const principles = [
+    {
+      title: "Metodo chiaro",
+      text: "Mi piace partire dal problema reale e scegliere una soluzione semplice, funzionale e facile da mantenere nel tempo.",
+    },
+    {
+      title: "Design con senso",
+      text: "Ogni dettaglio visivo ha un motivo: migliorare leggibilità, fiducia e esperienza utente senza appesantire il prodotto.",
+    },
+  ];
+
+  return (
+    <section className="py-32 px-6 max-w-6xl mx-auto">
+      <SectionHeader title="Il mio approccio" subtitle="Come lavoro" />
+      <div className="mt-16 grid md:grid-cols-2 gap-6">
+        {principles.map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-2xl bg-[#0d0d13] border border-[#1e1e26] relative overflow-hidden"
+          >
+            <div className="flex gap-1 text-[#f472b6] mb-6">
+              {[...Array(5)].map((_, s) => <Star key={s} size={16} fill="currentColor" />)}
+            </div>
+            <h3 className="text-xl font-display font-semibold text-white mb-4">{item.title}</h3>
+            <p className="text-[#d4d4d8] leading-relaxed mb-8">
+              {item.text}
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#22d3ee] p-[2px]">
+                 <div className="w-full h-full rounded-full bg-[#050507] flex items-center justify-center text-xs font-bold text-white">L</div>
+              </div>
+              <div>
+                <div className="font-semibold text-white">Lucadomenico</div>
+                <div className="text-xs text-[#8f8fa3]">Sviluppatore web</div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Pricing() {
+  return (
+    <section id="prezzi" className="py-32 px-6 max-w-6xl mx-auto">
+      <SectionHeader title="Investimento" subtitle="Pricing" center />
+      <div className="mt-16 grid md:grid-cols-3 gap-8 items-center">
+        <PricingCard title="Landing Page" price="€400" desc="Presenza web chiara, moderna e pronta a generare contatti." features={["Design personalizzato", "Versione mobile ottimizzata", "Struttura SEO base"]} />
+        <div className="relative">
+          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-[#8b5cf6] via-[#22d3ee] to-[#f472b6] opacity-50 blur-lg animate-pulse" />
+          <PricingCard highlighted title="Web App" price="€1200" desc="Strumento digitale completo con logica, UX e flussi utente pensati per il tuo obiettivo." features={["Frontend dinamico", "Connessione API", "Esperienza premium"]} />
+        </div>
+        <PricingCard title="Su Misura" price="Custom" desc="Per progetti complessi, obiettivi chiari e soluzioni costruite ad hoc." features={["Architettura scalabile", "Consulenza dedicata", "Supporto e sviluppo continuo"]} />
+      </div>
+    </section>
+  );
+}
+
+function PricingCard({ title, price, desc, features, highlighted }) {
+  const whatsappNumber = "3314075188";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Ciao, vorrei parlarti di un progetto.")}`;
+
+  return (
+    <motion.div
+      whileHover={{ y: -8, scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 220, damping: 18 }}
+      className={`relative h-full flex flex-col p-8 rounded-2xl ${highlighted ? 'bg-[#0d0d13] border border-[#22d3ee]/50 z-10 soft-glow' : 'bg-[#050507] border border-[#1e1e26] glass-panel'}`}
+    >
+      {highlighted && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] text-black text-xs font-bold rounded-full">Consigliato</span>}
+      <h3 className="text-xl font-display font-semibold text-white">{title}</h3>
+      <p className="text-sm text-[#8f8fa3] mt-2 mb-6">{desc}</p>
+      <div className="text-4xl font-bold font-display text-white mb-8">{price}</div>
+      <ul className="space-y-4 flex-1 mb-8">
+        {features.map((f, i) => (
+          <li key={i} className="flex items-center gap-3 text-sm text-[#d4d4d8]">
+            <Code2 size={16} className="text-[#22d3ee]" /> {f}
+          </li>
+        ))}
+      </ul>
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noreferrer"
+        className={`w-full block text-center py-3 rounded-xl font-medium transition-all ${highlighted ? 'bg-white text-black hover:bg-gray-200' : 'bg-[#1e1e26] text-white hover:bg-[#27272a]'}`}
+      >
+        Parliamone
+      </a>
+    </motion.div>
+  );
+}
+
+function FAQ() {
+  const qas = [
+    { q: "Che tipo di progetti realizzi?", a: "Mi occupo soprattutto di siti web, landing page, interfacce moderne e applicazioni web con attenzione all'esperienza utente e alle performance." },
+    { q: "Lavori anche con piccoli progetti o startup?", a: "Sì, mi piace collaborare con chi ha una visione chiara ma ha bisogno di supporto tecnico e creativo per trasformarla in qualcosa di concreto." },
+    { q: "Come lavoriamo insieme?", a: "Inizio comprendendo l'obiettivo, poi struttura il prodotto, definisco la UX e sviluppo una soluzione pensata per essere chiara, veloce e facile da usare." },
+  ];
+
+  return (
+    <section className="py-32 px-6 max-w-3xl mx-auto border-t border-[#1e1e26]">
+      <SectionHeader title="Domande Frequenti" subtitle="FAQ" center />
+      <div className="mt-12 space-y-4">
+        {qas.map((qa, i) => (
+          <FAQItem key={i} question={qa.q} answer={qa.a} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FAQItem({ question, answer }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }} className="border border-[#1e1e26] bg-[#0d0d13] rounded-xl overflow-hidden glass-panel">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left">
+        <span className="font-medium text-white">{question}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }}><ChevronDown size={20} className="text-[#8f8fa3]"/></motion.div>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+            <p className="px-6 pb-6 text-sm text-[#8f8fa3]">{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer id="contatti" className="pt-32 pb-10 border-t border-[#1e1e26] bg-[#050507] relative overflow-hidden">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gradient-to-t from-[#8b5cf6]/10 to-transparent pointer-events-none" />
+      <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+        <h2 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight">
+          Let's build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#22d3ee] to-[#f472b6]">amazing.</span>
+        </h2>
+        <p className="text-[#8f8fa3] mb-10 max-w-xl mx-auto">
+          Hai un'idea, un brand da far crescere o un problema da trasformare in prodotto? Parlami di quello che vuoi costruire.
+        </p>
+        <div className="flex flex-wrap justify-center gap-4 mb-20">
+          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(255,255,255,0.15)]">
+            <Mail size={20} /> Email
+          </a>
+          <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(37,211,102,0.25)]">
+            <WhatsAppIcon className="w-5 h-5" /> WhatsApp
+          </a>
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between pt-10 border-t border-[#1e1e26] text-sm text-[#8f8fa3]">
+          <div className="flex items-center gap-2 mb-4 md:mb-0">
+             <span className="text-[#8b5cf6] font-bold font-code">{"<L/>"}</span> © {new Date().getFullYear()} Lucadomenico
+          </div>
+          <div className="flex gap-3">
+            <a href="https://github.com/lucadomenico1" target="_blank" rel="noreferrer" aria-label="GitHub" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#22d3ee]/50 hover:text-white transition-colors flex items-center justify-center">
+              <GitHubIcon className="w-4 h-4" />
+            </a>
+            <a href="https://www.linkedin.com/in/lucadomenico-chiappetta/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#8b5cf6]/50 hover:text-white transition-colors flex items-center justify-center">
+              <LinkedInIcon className="w-4 h-4" />
+            </a>
+            <a href="https://instagram.com/_.lucad_" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
+              <InstagramIcon className="w-4 h-4" />
+            </a>
+            <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#25D366]/50 hover:text-white transition-colors flex items-center justify-center">
+              <WhatsAppIcon className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function SectionHeader({ title, subtitle, center = false }) {
+  return (
+    <div className={center ? "text-center" : ""}>
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        className="font-code text-sm text-[#22d3ee] mb-3 uppercase tracking-widest"
+      >
+        // {subtitle}
+      </motion.div>
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight"
+      >
+        {title}
+      </motion.h2>
+    </div>
+  );
+}
