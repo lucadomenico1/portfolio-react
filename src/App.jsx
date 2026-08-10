@@ -513,6 +513,9 @@ function Services() {
   return (
     <section id="servizi" className="py-32 px-6 max-w-6xl mx-auto">
       <SectionHeader title="Expertise" subtitle="Servizi" />
+      <p className="mt-6 max-w-2xl text-[#8f8fa3] text-base leading-relaxed">
+        Mi occupo di trasformare idee, brand e obiettivi in esperienze digitali chiare, efficaci e facili da usare.
+      </p>
       <div className="mt-16 grid md:grid-cols-3 gap-6">
         {srv.map((s, i) => (
           <TiltCard key={i} delay={i * 0.1}>
