@@ -1,16 +1,70 @@
-# React + Vite
+# ilMioPortfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Portfolio personale di Lucadomenico, realizzato con React + Vite e un design dark premium.
 
-Currently, two official plugins are available:
+## Descrizione
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Questo progetto è un sito portfolio moderno pensato per presentare:
+- le competenze tecniche
+- i servizi offerti
+- il percorso professionale
+- i contatti diretti
+- i canali social e WhatsApp
 
-## React Compiler
+L'interfaccia è costruita con un look elegante, animazioni fluide e una struttura adatta a un brand personale.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tecnologie utilizzate
 
-## Expanding the Oxlint configuration
+- React
+- Vite
+- JavaScript
+- Framer Motion
+- Lucide React
+- CSS customizzato
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Requisiti
+
+- Node.js 18+
+- npm
+
+## Installazione
+
+```bash
+npm install
+```
+
+## Avvio in locale
+
+```bash
+npm run dev
+```
+
+Apri il browser all'URL mostrato dal terminale, normalmente:
+
+```bash
+http://localhost:5173
+```
+
+## Build di produzione
+
+```bash
+npm run build
+```
+
+## Preview build
+
+```bash
+npm run preview
+```
+
+## Contatti
+
+- Email: lucadomenico.chiappetta@gmail.com
+- GitHub: https://github.com/lucadomenico1
+- LinkedIn: https://www.linkedin.com/in/lucadomenico-chiappetta/
+- Instagram: https://instagram.com/_.lucad_
+- WhatsApp: https://wa.me/3314075188
+
+## Licenza
+
+Questo progetto è stato creato a scopo personale e professionale.
