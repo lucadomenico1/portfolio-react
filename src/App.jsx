@@ -511,20 +511,18 @@ function SocialProof() {
 
 function Counter({ from, to }) {
   const [count, setCount] = useState(from);
-  const nodeRef = useRef(null);
-  const inView = useInView(nodeRef, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    if (inView) {
-      const controls = animate(from, to, {
-        duration: 2,
-        onUpdate(value) { setCount(Math.floor(value)); },
-      });
-      return () => controls.stop();
-    }
-  }, [inView, from, to]);
+    const controls = animate(from, to, {
+      duration: 1.8,
+      ease: "easeOut",
+      onUpdate(value) { setCount(Math.floor(value)); },
+    });
 
-  return <span ref={nodeRef}>{count}</span>;
+    return () => controls.stop();
+  }, [from, to]);
+
+  return <span>{count}</span>;
 }
 
 function Services() {
