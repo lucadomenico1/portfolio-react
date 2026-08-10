@@ -505,9 +505,9 @@ function Counter({ from, to }) {
 
 function Services() {
   const srv = [
-    { icon: Code2, title: "Sviluppo Frontend", desc: "Interfacce pixel-perfect, accessibili e animate." },
-    { icon: Server, title: "Logica Backend", desc: "Architetture solide, database e API RESTful veloci." },
-    { icon: Gauge, title: "Ottimizzazione", desc: "Core Web Vitals e performance di caricamento." }
+    { icon: Code2, number: "01", title: "Sviluppo Frontend", desc: "Interfacce pixel-perfect, accessibili e animate per dare valore immediato al tuo brand." },
+    { icon: Server, number: "02", title: "Logica Backend", desc: "Architetture solide, database e API RESTful che supportano il tuo prodotto senza frizioni." },
+    { icon: Gauge, number: "03", title: "Ottimizzazione", desc: "Performance, usabilità e velocità di caricamento pensate per migliorare esperienza e conversione." }
   ];
 
   return (
@@ -519,11 +519,19 @@ function Services() {
       <div className="mt-16 grid md:grid-cols-3 gap-6">
         {srv.map((s, i) => (
           <TiltCard key={i} delay={i * 0.1}>
-            <div className="p-8 h-full rounded-2xl bg-[#0d0d13] border border-[#1e1e26] relative overflow-hidden group hover:border-[#8b5cf6]/50 transition-colors glass-panel hover-lift">
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#8b5cf6]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <s.icon size={28} className="text-[#22d3ee] mb-6" />
-              <h3 className="text-xl font-display font-semibold mb-3">{s.title}</h3>
-              <p className="text-[#8f8fa3] leading-relaxed text-sm">{s.desc}</p>
+            <div className="group relative h-full overflow-hidden rounded-2xl border border-[#1e1e26] bg-[#0d0d13] p-8 transition-all duration-300 hover:border-[#8b5cf6]/60 hover:shadow-[0_18px_50px_rgba(108,92,231,0.15)] glass-panel hover-lift">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#8b5cf6]/12 via-transparent to-[#22d3ee]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative z-10">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#22d3ee]/30 bg-[#22d3ee]/6 text-[#22d3ee]">
+                    <s.icon size={24} />
+                  </div>
+                  <span className="font-code text-xs tracking-[0.25em] text-[#8f8fa3]">{s.number}</span>
+                </div>
+                <h3 className="mb-3 text-xl font-display font-semibold text-white">{s.title}</h3>
+                <div className="mb-5 h-px w-12 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee]" />
+                <p className="text-sm leading-relaxed text-[#8f8fa3]">{s.desc}</p>
+              </div>
             </div>
           </TiltCard>
         ))}
