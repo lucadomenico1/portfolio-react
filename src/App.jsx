@@ -117,7 +117,7 @@ function Loader({ onComplete }) {
         transition={{ duration: 0.5 }}
         className="font-code text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8b5cf6] via-[#22d3ee] to-[#f472b6]"
       >
-        {"<Lucadomenico />"}
+        {"<L/>"}
       </motion.div>
       <motion.div className="w-48 h-[2px] bg-[#1e1e26] mt-6 rounded-full overflow-hidden relative">
         <motion.div
@@ -239,9 +239,9 @@ export default function App() {
               <Services />
               <Skills />
               <Timeline />
-              <Testimonials />
               <Collaborazioni />
               <FAQ />
+              <CommentsSection />
             </main>
             <Footer />
           </motion.div>
@@ -273,8 +273,8 @@ function FloatingNav() {
       <div className="px-6 h-16 flex items-center justify-between">
         <a href="#" className="font-code font-bold text-lg text-[#f5f5f7] group">
           <span className="text-[#8b5cf6] group-hover:text-[#22d3ee] transition-colors">{"<"}</span>
-          Lucadomenico
-          <span className="text-[#22d3ee] group-hover:text-[#f472b6] transition-colors">{" />"}</span>
+          L
+          <span className="text-[#22d3ee] group-hover:text-[#f472b6] transition-colors">{"/>"}</span>
         </a>
         <nav className="hidden md:flex gap-8 text-sm text-[#8f8fa3]">
           {links.map((l) => (
@@ -653,53 +653,6 @@ function Timeline() {
   );
 }
 
-function Testimonials() {
-  const principles = [
-    {
-      title: "Metodo chiaro",
-      text: "Mi piace partire dal problema reale e scegliere una soluzione semplice, funzionale e facile da mantenere nel tempo.",
-    },
-    {
-      title: "Design con senso",
-      text: "Ogni dettaglio visivo ha un motivo: migliorare leggibilità, fiducia e esperienza utente senza appesantire il prodotto.",
-    },
-  ];
-
-  return (
-    <section className="py-32 px-6 max-w-6xl mx-auto">
-      <SectionHeader title="Il mio approccio" subtitle="Come lavoro" />
-      <div className="mt-16 grid md:grid-cols-2 gap-6">
-        {principles.map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="p-8 rounded-2xl bg-[#0d0d13] border border-[#1e1e26] relative overflow-hidden"
-          >
-            <div className="flex gap-1 text-[#f472b6] mb-6">
-              {[...Array(5)].map((_, s) => <Star key={s} size={16} fill="currentColor" />)}
-            </div>
-            <h3 className="text-xl font-display font-semibold text-white mb-4">{item.title}</h3>
-            <p className="text-[#d4d4d8] leading-relaxed mb-8">
-              {item.text}
-            </p>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#22d3ee] p-[2px]">
-                 <div className="w-full h-full rounded-full bg-[#050507] flex items-center justify-center text-xs font-bold text-white">L</div>
-              </div>
-              <div>
-                <div className="font-semibold text-white">Lucadomenico</div>
-                <div className="text-xs text-[#8f8fa3]">Sviluppatore web</div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function Collaborazioni() {
   const options = [
     {
@@ -800,6 +753,71 @@ function FAQItem({ question, answer }) {
   );
 }
 
+function CommentsSection() {
+  const [name, setName] = useState("");
+  const [comment, setComment] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!comment.trim()) return;
+    setSubmitted(true);
+    setName("");
+    setComment("");
+    setTimeout(() => setSubmitted(false), 2500);
+  };
+
+  return (
+    <section className="py-12 px-6 max-w-4xl mx-auto">
+      <div className="rounded-3xl border border-[#1e1e26] bg-[#0d0d13] p-6 sm:p-8 shadow-[0_20px_50px_rgba(139,92,246,0.08)]">
+        <div className="mb-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-[#22d3ee] font-code">Feedback</p>
+          <h3 className="mt-3 text-3xl font-display font-semibold text-white">Lascia un commento</h3>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="mb-2 block text-sm text-[#c4c4d2]">Nome</label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Il tuo nome"
+              className="w-full rounded-xl border border-[#1e1e26] bg-[#050507] px-4 py-3 text-white placeholder:text-[#71717a] outline-none transition focus:border-[#8b5cf6]/60"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="comment" className="mb-2 block text-sm text-[#c4c4d2]">Commento</label>
+            <textarea
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Scrivi il tuo feedback, un pensiero o una richiesta..."
+              rows="5"
+              className="w-full rounded-xl border border-[#1e1e26] bg-[#050507] px-4 py-3 text-white placeholder:text-[#71717a] outline-none transition focus:border-[#22d3ee]/60 resize-none"
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#050507] transition hover:scale-[1.02]"
+            >
+              Invia commento
+            </button>
+
+            {submitted && (
+              <span className="text-sm text-[#22d3ee]">Commento inviato.</span>
+            )}
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer id="contatti" className="pt-32 pb-10 border-t border-[#1e1e26] bg-[#050507] relative overflow-hidden">
@@ -830,7 +848,7 @@ function Footer() {
             <a href="https://www.linkedin.com/in/lucadomenico-chiappetta/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#8b5cf6]/50 hover:text-white transition-colors flex items-center justify-center">
               <LinkedInIcon className="w-4 h-4" />
             </a>
-            <a href="https://instagram.com/_.lucad___" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
+            <a href="https://instagram.com/_.lucad__" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
               <InstagramIcon className="w-4 h-4" />
             </a>
             <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#25D366]/50 hover:text-white transition-colors flex items-center justify-center">
