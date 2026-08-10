@@ -217,7 +217,6 @@ export default function App() {
               <Skills />
               <Timeline />
               <Testimonials />
-              <Pricing />
               <FAQ />
             </main>
             <Footer />
@@ -240,7 +239,7 @@ function FloatingNav() {
   const bg = useTransform(scrollY, [0, 100], ["rgba(5,5,7,0)", "rgba(13,13,19,0.7)"]);
   const border = useTransform(scrollY, [0, 100], ["rgba(30,30,38,0)", "rgba(30,30,38,1)"]);
 
-  const links = ["Servizi", "Skills", "Prezzi"];
+  const links = ["Servizi", "Skills"];
 
   return (
     <motion.header
@@ -665,55 +664,6 @@ function Testimonials() {
         ))}
       </div>
     </section>
-  );
-}
-
-function Pricing() {
-  return (
-    <section id="prezzi" className="py-32 px-6 max-w-6xl mx-auto">
-      <SectionHeader title="Investimento" subtitle="Pricing" center />
-      <div className="mt-16 grid md:grid-cols-3 gap-8 items-center">
-        <PricingCard title="Landing Page" price="€400" desc="Presenza web chiara, moderna e pronta a generare contatti." features={["Design personalizzato", "Versione mobile ottimizzata", "Struttura SEO base"]} />
-        <div className="relative">
-          <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-[#8b5cf6] via-[#22d3ee] to-[#f472b6] opacity-50 blur-lg animate-pulse" />
-          <PricingCard highlighted title="Web App" price="€1200" desc="Strumento digitale completo con logica, UX e flussi utente pensati per il tuo obiettivo." features={["Frontend dinamico", "Connessione API", "Esperienza premium"]} />
-        </div>
-        <PricingCard title="Su Misura" price="Custom" desc="Per progetti complessi, obiettivi chiari e soluzioni costruite ad hoc." features={["Architettura scalabile", "Consulenza dedicata", "Supporto e sviluppo continuo"]} />
-      </div>
-    </section>
-  );
-}
-
-function PricingCard({ title, price, desc, features, highlighted }) {
-  const whatsappNumber = "3314075188";
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Ciao, vorrei parlarti di un progetto.")}`;
-
-  return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.01 }}
-      transition={{ type: "spring", stiffness: 220, damping: 18 }}
-      className={`relative h-full flex flex-col p-8 rounded-2xl ${highlighted ? 'bg-[#0d0d13] border border-[#22d3ee]/50 z-10 soft-glow' : 'bg-[#050507] border border-[#1e1e26] glass-panel'}`}
-    >
-      {highlighted && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] text-black text-xs font-bold rounded-full">Consigliato</span>}
-      <h3 className="text-xl font-display font-semibold text-white">{title}</h3>
-      <p className="text-sm text-[#8f8fa3] mt-2 mb-6">{desc}</p>
-      <div className="text-4xl font-bold font-display text-white mb-8">{price}</div>
-      <ul className="space-y-4 flex-1 mb-8">
-        {features.map((f, i) => (
-          <li key={i} className="flex items-center gap-3 text-sm text-[#d4d4d8]">
-            <Code2 size={16} className="text-[#22d3ee]" /> {f}
-          </li>
-        ))}
-      </ul>
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noreferrer"
-        className={`w-full block text-center py-3 rounded-xl font-medium transition-all ${highlighted ? 'bg-white text-black hover:bg-gray-200' : 'bg-[#1e1e26] text-white hover:bg-[#27272a]'}`}
-      >
-        Parliamone
-      </a>
-    </motion.div>
   );
 }
 
