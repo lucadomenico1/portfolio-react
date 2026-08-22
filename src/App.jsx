@@ -243,6 +243,7 @@ export default function App() {
               <Skills />
               <Timeline />
               <FAQ />
+              <ContactSection />
             </main>
             <Footer />
           </motion.div>
@@ -651,26 +652,44 @@ function FAQItem({ question, answer }) {
 }
 
 
+function ContactSection() {
+  return (
+    <section id="contatti" className="relative py-24 flex flex-col items-center justify-center text-center px-4">
+      {/* Background subtle glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/10 blur-[100px] -z-10 rounded-full pointer-events-none"></div>
+      
+      <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+        Hai un progetto in mente?
+      </h2>
+      <p className="text-lg text-white/60 max-w-2xl mb-10 mx-auto">
+        Che si tratti di un'idea da sviluppare o di una collaborazione, sono sempre alla ricerca di nuove sfide. Parliamone!
+      </p>
+      
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <a 
+          href="mailto:lucadomenico.chiappetta@gmail.com" 
+          className="px-8 py-4 rounded-full bg-white text-zinc-950 font-semibold transition-transform hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+        >
+          Scrivimi un'Email
+        </a>
+        <a 
+          href="https://wa.me/3314075188" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="px-8 py-4 rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:scale-105"
+        >
+          Contattami su WhatsApp
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
-    <footer id="contatti" className="pt-32 pb-10 border-t border-[#1e1e26] bg-[#050507] relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gradient-to-t from-[#8b5cf6]/10 to-transparent pointer-events-none" />
+    <footer className="pt-10 pb-10 border-t border-[#1e1e26] bg-[#050507] relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <h2 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight">
-          Let's build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#22d3ee] to-[#f472b6]">amazing.</span>
-        </h2>
-        <p className="text-[#8f8fa3] mb-10 max-w-xl mx-auto">
-          Hai un'idea, un brand da far crescere o un problema da trasformare in prodotto? Parlami di quello che vuoi costruire.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4 mb-20">
-          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(255,255,255,0.15)]">
-            <Mail size={20} /> Email
-          </a>
-          <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(37,211,102,0.25)]">
-            <WhatsAppIcon className="w-5 h-5" /> WhatsApp
-          </a>
-        </div>
-        <div className="flex flex-col md:flex-row items-center justify-between pt-10 border-t border-[#1e1e26] text-sm text-[#8f8fa3]">
+        <div className="flex flex-col md:flex-row items-center justify-between text-sm text-[#8f8fa3]">
           <div className="flex items-center gap-2 mb-4 md:mb-0">
              <span className="text-[#8b5cf6] font-bold font-code">{"<L/>"}</span> © {new Date().getFullYear()} Lucadomenico
           </div>
