@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   AnimatePresence,
+  MotionConfig,
   useInView,
   animate,
   useMotionValue,
@@ -14,7 +15,6 @@ import {
   Server,
   Gauge,
   Mail,
-  Star,
   ChevronDown,
   ArrowRight,
   Files,
@@ -23,20 +23,150 @@ import {
   Sparkles,
 } from "lucide-react";
 
+const EMAIL_URL = "mailto:lucadomenico.chiappetta@gmail.com";
+const WHATSAPP_URL =
+  "https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto.";
+
+const NAV_LINKS = ["Servizi", "Skills", "Collaborazioni"];
+
+const CODE_LINES = [
+  { text: "import { Developer } from './types';", delay: 500 },
+  { text: "", delay: 1000 },
+  { text: "const luca: Developer = {", delay: 1200 },
+  { text: "  role: 'Full-Stack Developer',", delay: 1800, indent: 1 },
+  { text: "  skills: ['React', 'Node.js', 'Tailwind'],", delay: 2500, indent: 1 },
+  { text: "  status: 'Building cool things',", delay: 3200, indent: 1 },
+  { text: "  coffeeCups: Infinity,", delay: 3800, indent: 1 },
+  { text: "};", delay: 4500 },
+  { text: "", delay: 4800 },
+  { text: "export default luca;", delay: 5200 },
+];
+
+const STATS = [
+  { num: 24, label: "Mesi di studio", suffix: "+" },
+  { num: 3, label: "Aree di specializzazione", suffix: "" },
+  { num: 14, label: "Tecnologie", suffix: "" },
+];
+
+const SERVICES = [
+  {
+    icon: Code2,
+    number: "01",
+    title: "Sviluppo Frontend",
+    desc: "Interfacce pixel-perfect, accessibili e animate per dare valore immediato al tuo brand.",
+  },
+  {
+    icon: Server,
+    number: "02",
+    title: "Logica Backend",
+    desc: "Architetture solide, database e API RESTful che supportano il tuo prodotto senza frizioni.",
+  },
+  {
+    icon: Gauge,
+    number: "03",
+    title: "Ottimizzazione",
+    desc: "Performance, usabilità e velocità di caricamento pensate per migliorare esperienza e conversione.",
+  },
+];
+
+const TOOLS = [
+  "HTML",
+  "Java",
+  "C",
+  "React",
+  "JavaScript",
+  "Flutter",
+  "Node.js",
+  "Tailwind CSS",
+  "Figma",
+  "Git",
+  "SQL",
+];
+
+const TIMELINE_EVENTS = [
+  {
+    year: "2023",
+    title: "Inizio Studi Universitari",
+    desc: "Iscrizione a Informatica (L-31) per approfondire lo sviluppo software.",
+  },
+  {
+    year: "2024",
+    title: "Primi esperimenti pratici",
+    desc: "Approfondimento su applicazioni web e strumenti moderni per lo sviluppo.",
+  },
+  {
+    year: "Oggi",
+    title: "Aspirante Programmatore",
+    desc: "Studio, sviluppo e miglioro costantemente le mie competenze tecniche.",
+  },
+];
+
+const COLLABORATION_OPTIONS = [
+  {
+    title: "Landing Page",
+    desc: "Un sito professionale pensato per presentare il tuo brand, comunicare chiaramente e generare contatti reali.",
+    badge: "Brand presence",
+    whatsappText: "Ciao, vorrei discutere una Landing Page personalizzata.",
+  },
+  {
+    title: "Web App",
+    desc: "Soluzioni digitali più complesse, dove logica, UX e automazioni si uniscono in un prodotto completo.",
+    badge: "Product build",
+    whatsappText: "Ciao, vorrei parlare di una Web App su misura.",
+  },
+  {
+    title: "Collaborazione su misura",
+    desc: "Per progetti custom, obiettivi specifici e una soluzione progettata in base alle tue esigenze reali.",
+    badge: "Custom work",
+    whatsappText: "Ciao, vorrei iniziare una collaborazione su misura.",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    q: "Che tipo di progetti realizzi?",
+    a: "Mi occupo soprattutto di siti web, landing page, interfacce moderne e applicazioni web con attenzione all'esperienza utente e alle performance.",
+  },
+  {
+    q: "Lavori anche con piccoli progetti o startup?",
+    a: "Sì, mi piace collaborare con chi ha una visione chiara ma ha bisogno di supporto tecnico e creativo per trasformarla in qualcosa di concreto.",
+  },
+  {
+    q: "Come lavoriamo insieme?",
+    a: "Inizio comprendendo l'obiettivo, poi struttura il prodotto, definisco la UX e sviluppo una soluzione pensata per essere chiara, veloce e facile da usare.",
+  },
+];
+
 /* =============================================================================
    HOOKS PERSONALIZZATI
 ============================================================================= */
 
-function useMousePosition() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+function usePointerGlow() {
+  const ref = useRef(null);
+  const frame = useRef(null);
+
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const element = ref.current;
+    if (!element) return;
+
+    const updateGlow = (event) => {
+      cancelAnimationFrame(frame.current);
+      const { clientX, clientY } = event;
+      frame.current = requestAnimationFrame(() => {
+        const rect = element.getBoundingClientRect();
+        element.style.setProperty("--pointer-x", `${clientX - rect.left}px`);
+        element.style.setProperty("--pointer-y", `${clientY - rect.top}px`);
+      });
     };
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
+
+    element.addEventListener("pointermove", updateGlow, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame.current);
+      element.removeEventListener("pointermove", updateGlow);
+    };
   }, []);
-  return mousePosition;
+
+  return ref;
 }
 
 function useTypingEffect(text, speed = 30, delay = 0) {
@@ -63,6 +193,16 @@ function useTypingEffect(text, speed = 30, delay = 0) {
   }, [text, speed, start]);
 
   return displayedText;
+}
+
+function colorizeCode(code) {
+  return code
+    .replace(/[{}[\]]/g, '<span class="text-[#abb2bf]">$&</span>')
+    .replace(/import|from|const|export|default/g, '<span class="text-[#c678dd]">$&</span>')
+    .replace(/Developer/g, '<span class="text-[#e5c07b]">$&</span>')
+    .replace(/'[^']*'/g, '<span class="text-[#98c379]">$&</span>')
+    .replace(/Infinity/g, '<span class="text-[#d19a66]">$&</span>')
+    .replace(/role:|skills:|status:|coffeeCups:/g, '<span class="text-[#e06c75]">$&</span>');
 }
 
 function GitHubIcon(props) {
@@ -140,89 +280,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap');
-        
-        body { font-family: 'Inter', sans-serif; cursor: default; background: #050507; }
-        
-        .font-display { font-family: 'Space Grotesk', sans-serif; }
-        .font-code { font-family: 'JetBrains Mono', monospace; }
-        
-        .bg-noise {
-          position: fixed; inset: 0; z-index: -1; opacity: 0.04; pointer-events: none;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        .bg-grid {
-          background-size: 40px 40px;
-          background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-          mask-image: radial-gradient(circle at center, black, transparent 80%);
-        }
-        
-        .text-gradient {
-          background: linear-gradient(90deg, #8b5cf6, #22d3ee, #f472b6);
-          -webkit-background-clip: text; color: transparent;
-        }
-
-        .glass-panel {
-          background: rgba(13, 13, 19, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          box-shadow: 0 24px 60px rgba(11, 11, 17, 0.45);
-        }
-
-        .soft-glow {
-          box-shadow: 0 0 30px rgba(139, 92, 246, 0.18);
-        }
-
-        .hover-lift {
-          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-        }
-
-        .hover-lift:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 22px 50px rgba(139, 92, 246, 0.15);
-        }
-
-        @keyframes floatSlow {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
-        }
-
-        .float-slow {
-          animation: floatSlow 7s ease-in-out infinite;
-        }
-
-        @media (max-width: 768px) {
-          .hero-shell {
-            padding-top: 6.5rem;
-            padding-bottom: 4rem;
-          }
-
-          .hero-title {
-            font-size: clamp(2.7rem, 11vw, 4.2rem);
-            line-height: 0.96;
-            letter-spacing: -0.05em;
-          }
-
-          .hero-orb {
-            filter: blur(80px) !important;
-            opacity: 0.18 !important;
-            transform: scale(0.8) !important;
-          }
-
-          .float-slow {
-            animation-duration: 12s;
-          }
-        }
-        
-      `}</style>
-
+    <MotionConfig reducedMotion="user">
       <AnimatePresence>
         {loading ? (
-          <Loader key="loader" onComplete={() => setTimeout(() => setLoading(false), 200)} />
+          <Loader key="loader" onComplete={() => setLoading(false)} />
         ) : (
           <motion.div
             key="content"
@@ -247,7 +308,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </MotionConfig>
   );
 }
 
@@ -263,8 +324,6 @@ function FloatingNav() {
   const bg = useTransform(scrollY, [0, 100], ["rgba(5,5,7,0)", "rgba(13,13,19,0.7)"]);
   const border = useTransform(scrollY, [0, 100], ["rgba(30,30,38,0)", "rgba(30,30,38,1)"]);
 
-  const links = ["Servizi", "Skills", "Collaborazioni"];
-
   return (
     <motion.header
       style={{ y, width, borderRadius: br, backgroundColor: bg, borderColor: border }}
@@ -277,7 +336,7 @@ function FloatingNav() {
           <span className="text-[#22d3ee] group-hover:text-[#f472b6] transition-colors">{"/>"}</span>
         </a>
         <nav className="hidden md:flex gap-8 text-sm text-[#8f8fa3]">
-          {links.map((l) => (
+          {NAV_LINKS.map((l) => (
             <a key={l} href={`#${l.toLowerCase()}`} className="hover:text-[#f5f5f7] transition-colors relative group">
               {l}
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] transition-all group-hover:w-full" />
@@ -286,14 +345,14 @@ function FloatingNav() {
         </nav>
         <div className="hidden sm:flex items-center gap-3">
           <a
-            href="mailto:lucadomenico.chiappetta@gmail.com"
+            href={EMAIL_URL}
             className="inline-flex relative overflow-hidden group bg-white/5 border border-white/10 px-5 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-all"
           >
             <span className="relative z-10 text-gradient group-hover:text-white transition-colors">Email</span>
             <div className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee] opacity-0 group-hover:opacity-100 transition-opacity blur-lg" />
           </a>
           <a
-            href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto."
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
             className="inline-flex relative overflow-hidden group bg-white/5 border border-white/10 px-5 py-2 rounded-full text-sm font-medium hover:bg-white/10 transition-all"
@@ -315,10 +374,13 @@ function FloatingNav() {
 }
 
 function Hero() {
-  const { x, y } = useMousePosition();
+  const glowRef = usePointerGlow();
   
   return (
-    <section className="relative min-h-screen pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 flex items-center overflow-hidden hero-shell">
+    <section
+      ref={glowRef}
+      className="relative min-h-screen pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 flex items-center overflow-hidden hero-shell"
+    >
       <div className="absolute inset-0 bg-grid opacity-30" />
       <motion.div
         className="hero-orb absolute top-1/4 -left-32 w-56 h-56 sm:w-96 sm:h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[120px] sm:blur-[150px] opacity-20 sm:opacity-30"
@@ -342,8 +404,7 @@ function Hero() {
       />
       
       <motion.div
-        className="pointer-events-none absolute inset-0 z-0 hidden md:block"
-        style={{ background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(139,92,246,0.1), transparent 40%)` }}
+        className="pointer-glow pointer-events-none absolute inset-0 z-0 hidden md:block"
       />
 
       <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center w-full">
@@ -425,19 +486,10 @@ function Hero() {
             
             <div className="flex-1 p-4 font-code text-sm leading-6 text-[#d4d4d8] overflow-hidden relative">
               <div className="absolute left-0 top-4 bottom-4 w-10 text-right pr-4 text-[#52525b] select-none space-y-0">
-                {[...Array(10)].map((_, i) => <div key={i}>{i + 1}</div>)}
+                {CODE_LINES.map((line, index) => <div key={`${line.delay}-number`}>{index + 1}</div>)}
               </div>
               <div className="pl-8">
-                <CodeLine text="import { Developer } from './types';" delay={500} />
-                <CodeLine text="" delay={1000} />
-                <CodeLine text="const luca: Developer = {" delay={1200} />
-                <CodeLine text="  role: 'Full-Stack Developer'," delay={1800} indent={1} />
-                <CodeLine text="  skills: ['React', 'Node.js', 'Tailwind']," delay={2500} indent={1} />
-                <CodeLine text="  status: 'Building cool things'," delay={3200} indent={1} />
-                <CodeLine text="  coffeeCups: Infinity," delay={3800} indent={1} />
-                <CodeLine text="};" delay={4500} />
-                <CodeLine text="" delay={4800} />
-                <CodeLine text="export default luca;" delay={5200} />
+                {CODE_LINES.map((line) => <CodeLine key={line.delay} {...line} />)}
               </div>
             </div>
           </div>
@@ -449,37 +501,22 @@ function Hero() {
 
 function CodeLine({ text, delay, indent = 0 }) {
   const typed = useTypingEffect(text, 40, delay);
-  const colorize = (str) => {
-    return str
-      .replace(/import|from|const|export|default/g, '<span class="text-[#c678dd]">$&</span>')
-      .replace(/Developer/g, '<span class="text-[#e5c07b]">$&</span>')
-      .replace(/'[^']*'/g, '<span class="text-[#98c379]">$&</span>')
-      .replace(/Infinity/g, '<span class="text-[#d19a66]">$&</span>')
-      .replace(/[{}[\]]/g, '<span class="text-[#abb2bf]">$&</span>')
-      .replace(/role:|skills:|status:|coffeeCups:/g, '<span class="text-[#e06c75]">$&</span>');
-  };
 
   return (
     <div style={{ marginLeft: `${indent * 1.5}rem` }}>
-      <span dangerouslySetInnerHTML={{ __html: colorize(typed) }} />
+      <span dangerouslySetInnerHTML={{ __html: colorizeCode(typed) }} />
       {typed === text ? "" : <span className="animate-pulse text-[#22d3ee]">|</span>}
     </div>
   );
 }
 
 function SocialProof() {
-  const stats = [
-    { num: 24, label: "Mesi di studio", suffix: "+" },
-    { num: 3, label: "Aree di specializzazione", suffix: "" },
-    { num: 14, label: "Tecnologie", suffix: "" },
-  ];
-
   return (
     <section className="py-16 border-y border-[#1e1e26] bg-[#050507]/50 backdrop-blur-xl relative z-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-        {stats.map((s, i) => (
+        {STATS.map((s, i) => (
           <motion.div
-            key={i}
+            key={s.label}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -510,28 +547,26 @@ function SocialProof() {
 }
 
 function Counter({ from, to }) {
-  const [count, setCount] = useState(from);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const count = useMotionValue(from);
+  const rounded = useTransform(count, (value) => Math.floor(value));
 
   useEffect(() => {
-    const controls = animate(from, to, {
+    if (!isInView) return;
+
+    const controls = animate(count, to, {
       duration: 1.8,
       ease: "easeOut",
-      onUpdate(value) { setCount(Math.floor(value)); },
     });
 
     return () => controls.stop();
-  }, [from, to]);
+  }, [count, isInView, to]);
 
-  return <span>{count}</span>;
+  return <motion.span ref={ref}>{rounded}</motion.span>;
 }
 
 function Services() {
-  const srv = [
-    { icon: Code2, number: "01", title: "Sviluppo Frontend", desc: "Interfacce pixel-perfect, accessibili e animate per dare valore immediato al tuo brand." },
-    { icon: Server, number: "02", title: "Logica Backend", desc: "Architetture solide, database e API RESTful che supportano il tuo prodotto senza frizioni." },
-    { icon: Gauge, number: "03", title: "Ottimizzazione", desc: "Performance, usabilità e velocità di caricamento pensate per migliorare esperienza e conversione." }
-  ];
-
   return (
     <section id="servizi" className="py-32 px-6 max-w-6xl mx-auto">
       <SectionHeader title="Expertise" subtitle="Servizi" />
@@ -539,8 +574,8 @@ function Services() {
         Mi occupo di trasformare idee, brand e obiettivi in esperienze digitali chiare, efficaci e facili da usare.
       </p>
       <div className="mt-16 grid md:grid-cols-3 gap-6">
-        {srv.map((s, i) => (
-          <TiltCard key={i} delay={i * 0.1}>
+        {SERVICES.map((s, i) => (
+          <TiltCard key={s.number} delay={i * 0.1}>
             <div className="group relative h-full overflow-hidden rounded-2xl border border-[#1e1e26] bg-[#0d0d13] p-8 transition-all duration-300 hover:border-[#8b5cf6]/60 hover:shadow-[0_18px_50px_rgba(108,92,231,0.15)] glass-panel hover-lift">
               <div className="absolute inset-0 bg-gradient-to-br from-[#8b5cf6]/12 via-transparent to-[#22d3ee]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative z-10">
@@ -594,14 +629,12 @@ function TiltCard({ children, delay }) {
 }
 
 function Skills() {
-  const tools = ["HTML", "Java", "C", "React", "JavaScript", "Flutter", "Node.js", "Tailwind CSS", "Figma", "Git", "SQL"];
-  
   return (
     <section id="skills" className="py-32 bg-[#050507] border-y border-[#1e1e26] relative overflow-hidden">
        <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
           <SectionHeader title="Tech Stack" subtitle="Tecnologie" center />
           <div className="mt-16 flex flex-wrap justify-center gap-4">
-             {tools.map((t, i) => (
+             {TOOLS.map((t, i) => (
                 <motion.div
                   key={t}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -621,19 +654,13 @@ function Skills() {
 }
 
 function Timeline() {
-  const events = [
-    { year: "2023", title: "Inizio Studi Universitari", desc: "Iscrizione a Informatica (L-31) per approfondire lo sviluppo software." },
-    { year: "2024", title: "Primi esperimenti pratici", desc: "Approfondimento su applicazioni web e strumenti moderni per lo sviluppo." },
-    { year: "Oggi", title: "Aspirante Programmatore", desc: "Studio, sviluppo e miglioro costantemente le mie competenze tecniche." },
-  ];
-
   return (
     <section id="timeline" className="py-32 px-6 max-w-4xl mx-auto relative">
       <SectionHeader title="Il mio percorso" subtitle="Timeline" />
       <div className="mt-20 relative pl-8 border-l-2 border-[#1e1e26]">
-         {events.map((e, i) => (
+         {TIMELINE_EVENTS.map((e, i) => (
            <motion.div 
-             key={i}
+             key={e.year}
              initial={{ opacity: 0, x: -50 }}
              whileInView={{ opacity: 1, x: 0 }}
              viewport={{ once: true, margin: "-100px" }}
@@ -654,32 +681,11 @@ function Timeline() {
 }
 
 function Collaborazioni() {
-  const options = [
-    {
-      title: "Landing Page",
-      desc: "Un sito professionale pensato per presentare il tuo brand, comunicare chiaramente e generare contatti reali.",
-      badge: "Brand presence",
-      whatsappText: "Ciao, vorrei discutere una Landing Page personalizzata.",
-    },
-    {
-      title: "Web App",
-      desc: "Soluzioni digitali più complesse, dove logica, UX e automazioni si uniscono in un prodotto completo.",
-      badge: "Product build",
-      whatsappText: "Ciao, vorrei parlare di una Web App su misura.",
-    },
-    {
-      title: "Collaborazione su misura",
-      desc: "Per progetti custom, obiettivi specifici e una soluzione progettata in base alle tue esigenze reali.",
-      badge: "Custom work",
-      whatsappText: "Ciao, vorrei iniziare una collaborazione su misura.",
-    },
-  ];
-
   return (
     <section id="collaborazioni" className="py-32 px-6 max-w-6xl mx-auto">
       <SectionHeader title="Collaborazioni" subtitle="Approccio" center />
       <div className="mt-16 grid md:grid-cols-3 gap-6">
-        {options.map((item, i) => {
+        {COLLABORATION_OPTIONS.map((item, i) => {
           const whatsappUrl = `https://wa.me/3314075188?text=${encodeURIComponent(item.whatsappText)}`;
 
           return (
@@ -716,18 +722,12 @@ function Collaborazioni() {
 }
 
 function FAQ() {
-  const qas = [
-    { q: "Che tipo di progetti realizzi?", a: "Mi occupo soprattutto di siti web, landing page, interfacce moderne e applicazioni web con attenzione all'esperienza utente e alle performance." },
-    { q: "Lavori anche con piccoli progetti o startup?", a: "Sì, mi piace collaborare con chi ha una visione chiara ma ha bisogno di supporto tecnico e creativo per trasformarla in qualcosa di concreto." },
-    { q: "Come lavoriamo insieme?", a: "Inizio comprendendo l'obiettivo, poi struttura il prodotto, definisco la UX e sviluppo una soluzione pensata per essere chiara, veloce e facile da usare." },
-  ];
-
   return (
     <section className="py-32 px-6 max-w-3xl mx-auto border-t border-[#1e1e26]">
       <SectionHeader title="Domande Frequenti" subtitle="FAQ" center />
       <div className="mt-12 space-y-4">
-        {qas.map((qa, i) => (
-          <FAQItem key={i} question={qa.q} answer={qa.a} />
+        {FAQ_ITEMS.map((qa) => (
+          <FAQItem key={qa.q} question={qa.q} answer={qa.a} />
         ))}
       </div>
     </section>
@@ -738,7 +738,12 @@ function FAQItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
     <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }} className="border border-[#1e1e26] bg-[#0d0d13] rounded-xl overflow-hidden glass-panel">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className="w-full flex items-center justify-between p-6 text-left"
+      >
         <span className="font-medium text-white">{question}</span>
         <motion.div animate={{ rotate: open ? 180 : 0 }}><ChevronDown size={20} className="text-[#8f8fa3]"/></motion.div>
       </button>
@@ -757,14 +762,19 @@ function CommentsSection() {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const feedbackTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(feedbackTimer.current), []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!comment.trim()) return;
+
+    clearTimeout(feedbackTimer.current);
     setSubmitted(true);
     setName("");
     setComment("");
-    setTimeout(() => setSubmitted(false), 2500);
+    feedbackTimer.current = setTimeout(() => setSubmitted(false), 2500);
   };
 
   return (
@@ -796,6 +806,7 @@ function CommentsSection() {
               onChange={(e) => setComment(e.target.value)}
               placeholder="Scrivi il tuo feedback, un pensiero o una richiesta..."
               rows="5"
+              required
               className="w-full rounded-xl border border-[#1e1e26] bg-[#050507] px-4 py-3 text-white placeholder:text-[#71717a] outline-none transition focus:border-[#22d3ee]/60 resize-none"
             />
           </div>
@@ -809,7 +820,7 @@ function CommentsSection() {
             </button>
 
             {submitted && (
-              <span className="text-sm text-[#22d3ee]">Commento inviato.</span>
+              <span role="status" className="text-sm text-[#22d3ee]">Commento inviato.</span>
             )}
           </div>
         </form>
@@ -830,10 +841,10 @@ function Footer() {
           Hai un'idea, un brand da far crescere o un problema da trasformare in prodotto? Parlami di quello che vuoi costruire.
         </p>
         <div className="flex flex-wrap justify-center gap-4 mb-20">
-          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(255,255,255,0.15)]">
+          <a href={EMAIL_URL} className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(255,255,255,0.15)]">
             <Mail size={20} /> Email
           </a>
-          <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(37,211,102,0.25)]">
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_15px_30px_rgba(37,211,102,0.25)]">
             <WhatsAppIcon className="w-5 h-5" /> WhatsApp
           </a>
         </div>
@@ -851,7 +862,7 @@ function Footer() {
             <a href="https://instagram.com/_.lucad__" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#f472b6]/50 hover:text-white transition-colors flex items-center justify-center">
               <InstagramIcon className="w-4 h-4" />
             </a>
-            <a href="https://wa.me/3314075188?text=Hi%20Lucadomenico%2C%20vorrei%20contattarti%20per%20un%20progetto." target="_blank" rel="noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#25D366]/50 hover:text-white transition-colors flex items-center justify-center">
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-[#1e1e26] bg-[#0d0d13] hover:border-[#25D366]/50 hover:text-white transition-colors flex items-center justify-center">
               <WhatsAppIcon className="w-4 h-4" />
             </a>
           </div>
