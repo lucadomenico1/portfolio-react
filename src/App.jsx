@@ -22,6 +22,16 @@ import {
   GitBranch,
   Sparkles,
 } from "lucide-react";
+import { CircularCarousel } from "./components/CircularCarousel";
+import { MeshGradientSVG } from "./components/MeshGradientSVG";
+
+const portfolioItems = [
+  { id: "1", title: "React & Tailwind", description: "Modern, responsive, and performant web interfaces.", tag: "Frontend" },
+  { id: "2", title: "Titanlift App", description: "Mobile workout application developed with Flutter and Dart.", tag: "Mobile" },
+  { id: "3", title: "Java Servlets E-commerce", description: "Dynamic backend platform using JSP and DAO pattern.", tag: "Backend" },
+  { id: "4", title: "Database Storage", description: "Experience with local data persistence using Isar.", tag: "Data" },
+  { id: "5", title: "Web Technologies", description: "Solid foundation in HTML, CSS, JavaScript, and HTTP protocols.", tag: "Core Skills" },
+];
 
 /* =============================================================================
    HOOKS PERSONALIZZATI
@@ -235,6 +245,7 @@ export default function App() {
             <FloatingNav />
             <main>
               <Hero />
+              <CircularCarousel items={portfolioItems} className="py-20" />
               <SocialProof />
               <Services />
               <Skills />
@@ -247,6 +258,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      <MeshGradientSVG />
     </>
   );
 }
