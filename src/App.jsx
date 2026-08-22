@@ -25,12 +25,12 @@ import {
 import { CircularCarousel } from "./components/CircularCarousel";
 import { MeshGradientSVG } from "./components/MeshGradientSVG";
 
-const portfolioItems = [
-  { id: "1", title: "React & Tailwind", description: "Modern, responsive, and performant web interfaces.", tag: "Frontend" },
-  { id: "2", title: "Titanlift App", description: "Mobile workout application developed with Flutter and Dart.", tag: "Mobile" },
-  { id: "3", title: "Java Servlets E-commerce", description: "Dynamic backend platform using JSP and DAO pattern.", tag: "Backend" },
-  { id: "4", title: "Database Storage", description: "Experience with local data persistence using Isar.", tag: "Data" },
-  { id: "5", title: "Web Technologies", description: "Solid foundation in HTML, CSS, JavaScript, and HTTP protocols.", tag: "Core Skills" },
+const collaborationsItems = [
+  { id: "1", title: "Tech Startup", description: "Sviluppo di una piattaforma SaaS scalabile.", tag: "SaaS" },
+  { id: "2", title: "Agenzia Creativa", description: "Creazione di landing page ad alta conversione.", tag: "Web Design" },
+  { id: "3", title: "E-Commerce locale", description: "Integrazione di sistemi di pagamento e gestione ordini.", tag: "E-Commerce" },
+  { id: "4", title: "Studio di Design", description: "Sviluppo frontend per mockup interattivi avanzati.", tag: "Frontend" },
+  { id: "5", title: "Freelance Network", description: "Collaborazione per lo sviluppo di tool interni.", tag: "Internal Tools" },
 ];
 
 /* =============================================================================
@@ -245,7 +245,6 @@ export default function App() {
             <FloatingNav />
             <main>
               <Hero />
-              <CircularCarousel items={portfolioItems} className="py-20" />
               <SocialProof />
               <Services />
               <Skills />
@@ -647,6 +646,7 @@ function Collaborazioni() {
   return (
     <section id="collaborazioni" className="py-32 px-6 max-w-6xl mx-auto">
       <SectionHeader title="Collaborazioni" subtitle="Approccio" center />
+      <CircularCarousel items={collaborationsItems} className="my-16" />
       <div className="mt-16 grid md:grid-cols-3 gap-6">
         {options.map((item, i) => {
           const whatsappUrl = `https://wa.me/3314075188?text=${encodeURIComponent(item.whatsappText)}`;
