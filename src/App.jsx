@@ -147,7 +147,7 @@ function usePointerGlow() {
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || !window.matchMedia("(pointer: fine)").matches) return;
+    if (!element) return;
 
     const updateGlow = (event) => {
       cancelAnimationFrame(frame.current);
@@ -197,11 +197,11 @@ function useTypingEffect(text, speed = 30, delay = 0) {
 
 function colorizeCode(code) {
   return code
+    .replace(/[{}[\]]/g, '<span class="text-[#abb2bf]">$&</span>')
     .replace(/import|from|const|export|default/g, '<span class="text-[#c678dd]">$&</span>')
     .replace(/Developer/g, '<span class="text-[#e5c07b]">$&</span>')
     .replace(/'[^']*'/g, '<span class="text-[#98c379]">$&</span>')
     .replace(/Infinity/g, '<span class="text-[#d19a66]">$&</span>')
-    .replace(/[{}[\]]/g, '<span class="text-[#abb2bf]">$&</span>')
     .replace(/role:|skills:|status:|coffeeCups:/g, '<span class="text-[#e06c75]">$&</span>');
 }
 
