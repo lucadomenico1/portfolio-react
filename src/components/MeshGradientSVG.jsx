@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 export function MeshGradientSVG() {
-  const colors = ["#FFB3D9", "#87CEEB", "#4A90E2", "#2C3E50", "#1A1A2E"];
+  const colors = ["#020617", "#3b82f6", "#8b5cf6", "#1e1b4b", "#06b6d4"];
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
 
@@ -28,7 +28,7 @@ export function MeshGradientSVG() {
 
   return (
     <motion.div
-      className="fixed bottom-4 right-4 z-50 w-32 h-auto drop-shadow-2xl"
+      className="relative w-full max-w-lg mx-auto p-4 md:p-8 drop-shadow-[0_0_40px_rgba(139,92,246,0.3)]"
       animate={{ y: [0, -8, 0], scaleY: [1, 1.05, 1] }}
       transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
       style={{ transformOrigin: "bottom center" }}

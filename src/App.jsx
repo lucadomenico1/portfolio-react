@@ -258,7 +258,6 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-      <MeshGradientSVG />
     </>
   );
 }
@@ -411,49 +410,7 @@ function Hero() {
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, rotateY: -15, rotateX: 10 }}
-          animate={{ opacity: 1, scale: 1, rotateY: 0, rotateX: 0 }}
-          transition={{ duration: 1, type: "spring", bounce: 0.4 }}
-          style={{ transformPerspective: 1000 }}
-          className="float-slow relative rounded-xl border border-[#1e1e26] bg-[#09090b] shadow-2xl shadow-[#8b5cf6]/10 overflow-hidden hidden md:block"
-        >
-          <div className="flex items-center justify-between px-4 py-2 bg-[#18181b] border-b border-[#27272a]">
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#ed6a5e]" />
-              <div className="w-3 h-3 rounded-full bg-[#f4bf4f]" />
-              <div className="w-3 h-3 rounded-full bg-[#61c554]" />
-            </div>
-            <div className="text-xs font-code text-[#a1a1aa]">App.tsx — Profile</div>
-            <div className="w-10" />
-          </div>
-          
-          <div className="flex h-[350px]">
-            <div className="w-12 bg-[#18181b] border-r border-[#27272a] flex flex-col items-center py-4 gap-6 text-[#71717a]">
-              <Files size={20} className="text-white" />
-              <Search size={20} />
-              <GitBranch size={20} />
-            </div>
-            
-            <div className="flex-1 p-4 font-code text-sm leading-6 text-[#d4d4d8] overflow-hidden relative">
-              <div className="absolute left-0 top-4 bottom-4 w-10 text-right pr-4 text-[#52525b] select-none space-y-0">
-                {[...Array(10)].map((_, i) => <div key={i}>{i + 1}</div>)}
-              </div>
-              <div className="pl-8">
-                <CodeLine text="import { Developer } from './types';" delay={500} />
-                <CodeLine text="" delay={1000} />
-                <CodeLine text="const luca: Developer = {" delay={1200} />
-                <CodeLine text="  role: 'Full-Stack Developer'," delay={1800} indent={1} />
-                <CodeLine text="  skills: ['React', 'Node.js', 'Tailwind']," delay={2500} indent={1} />
-                <CodeLine text="  status: 'Building cool things'," delay={3200} indent={1} />
-                <CodeLine text="  coffeeCups: Infinity," delay={3800} indent={1} />
-                <CodeLine text="};" delay={4500} />
-                <CodeLine text="" delay={4800} />
-                <CodeLine text="export default luca;" delay={5200} />
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <MeshGradientSVG />
       </div>
     </section>
   );
