@@ -22,16 +22,9 @@ import {
   GitBranch,
   Sparkles,
 } from "lucide-react";
-import { CircularCarousel } from "./components/CircularCarousel";
 import { MeshGradientSVG } from "./components/MeshGradientSVG";
 
-const collaborationsItems = [
-  { id: "1", title: "Tech Startup", description: "Sviluppo di una piattaforma SaaS scalabile.", tag: "SaaS" },
-  { id: "2", title: "Agenzia Creativa", description: "Creazione di landing page ad alta conversione.", tag: "Web Design" },
-  { id: "3", title: "E-Commerce locale", description: "Integrazione di sistemi di pagamento e gestione ordini.", tag: "E-Commerce" },
-  { id: "4", title: "Studio di Design", description: "Sviluppo frontend per mockup interattivi avanzati.", tag: "Frontend" },
-  { id: "5", title: "Freelance Network", description: "Collaborazione per lo sviluppo di tool interni.", tag: "Internal Tools" },
-];
+
 
 /* =============================================================================
    HOOKS PERSONALIZZATI
@@ -249,9 +242,7 @@ export default function App() {
               <Services />
               <Skills />
               <Timeline />
-              <Collaborazioni />
               <FAQ />
-              <CommentsSection />
             </main>
             <Footer />
           </motion.div>
@@ -272,8 +263,7 @@ function FloatingNav() {
   const br = useTransform(scrollY, [0, 100], ["0px", "24px"]);
   const bg = useTransform(scrollY, [0, 100], ["rgba(5,5,7,0)", "rgba(13,13,19,0.7)"]);
   const border = useTransform(scrollY, [0, 100], ["rgba(30,30,38,0)", "rgba(30,30,38,1)"]);
-
-  const links = ["Servizi", "Skills", "Collaborazioni"];
+  const links = ["Servizi", "Skills"];
 
   return (
     <motion.header
@@ -621,68 +611,6 @@ function Timeline() {
   );
 }
 
-function Collaborazioni() {
-  const options = [
-    {
-      title: "Landing Page",
-      desc: "Un sito professionale pensato per presentare il tuo brand, comunicare chiaramente e generare contatti reali.",
-      badge: "Brand presence",
-      whatsappText: "Ciao, vorrei discutere una Landing Page personalizzata.",
-    },
-    {
-      title: "Web App",
-      desc: "Soluzioni digitali più complesse, dove logica, UX e automazioni si uniscono in un prodotto completo.",
-      badge: "Product build",
-      whatsappText: "Ciao, vorrei parlare di una Web App su misura.",
-    },
-    {
-      title: "Collaborazione su misura",
-      desc: "Per progetti custom, obiettivi specifici e una soluzione progettata in base alle tue esigenze reali.",
-      badge: "Custom work",
-      whatsappText: "Ciao, vorrei iniziare una collaborazione su misura.",
-    },
-  ];
-
-  return (
-    <section id="collaborazioni" className="py-32 px-6 max-w-6xl mx-auto">
-      <SectionHeader title="Collaborazioni" subtitle="Approccio" center />
-      <CircularCarousel items={collaborationsItems} className="my-16" />
-      <div className="mt-16 grid md:grid-cols-3 gap-6">
-        {options.map((item, i) => {
-          const whatsappUrl = `https://wa.me/3314075188?text=${encodeURIComponent(item.whatsappText)}`;
-
-          return (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group relative h-full overflow-hidden rounded-2xl border border-[#1e1e26] bg-[#0d0d13] p-8 transition-all duration-300 hover:border-[#22d3ee]/50 hover:shadow-[0_18px_50px_rgba(34,211,238,0.12)] glass-panel"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#22d3ee]/8 via-transparent to-[#8b5cf6]/8 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative z-10 flex h-full flex-col">
-                <span className="inline-flex rounded-full border border-[#22d3ee]/30 bg-[#22d3ee]/5 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#22d3ee]">{item.badge}</span>
-                <h3 className="mt-6 text-xl font-display font-semibold text-white">{item.title}</h3>
-                <p className="mt-4 text-sm leading-relaxed text-[#8f8fa3]">{item.desc}</p>
-                <div className="mt-8 pt-6 border-t border-[#1e1e26]">
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#050507] transition-transform hover:scale-[1.02]"
-                  >
-                    Parliamone
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
 
 function FAQ() {
   const qas = [
@@ -722,70 +650,6 @@ function FAQItem({ question, answer }) {
   );
 }
 
-function CommentsSection() {
-  const [name, setName] = useState("");
-  const [comment, setComment] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!comment.trim()) return;
-    setSubmitted(true);
-    setName("");
-    setComment("");
-    setTimeout(() => setSubmitted(false), 2500);
-  };
-
-  return (
-    <section className="py-12 px-6 max-w-4xl mx-auto">
-      <div className="rounded-3xl border border-[#1e1e26] bg-[#0d0d13] p-6 sm:p-8 shadow-[0_20px_50px_rgba(139,92,246,0.08)]">
-        <div className="mb-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-[#22d3ee] font-code">Feedback</p>
-          <h3 className="mt-3 text-3xl font-display font-semibold text-white">Lascia un commento</h3>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label htmlFor="name" className="mb-2 block text-sm text-[#c4c4d2]">Nome</label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Il tuo nome"
-              className="w-full rounded-xl border border-[#1e1e26] bg-[#050507] px-4 py-3 text-white placeholder:text-[#71717a] outline-none transition focus:border-[#8b5cf6]/60"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="comment" className="mb-2 block text-sm text-[#c4c4d2]">Commento</label>
-            <textarea
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Scrivi il tuo feedback, un pensiero o una richiesta..."
-              rows="5"
-              className="w-full rounded-xl border border-[#1e1e26] bg-[#050507] px-4 py-3 text-white placeholder:text-[#71717a] outline-none transition focus:border-[#22d3ee]/60 resize-none"
-            />
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#050507] transition hover:scale-[1.02]"
-            >
-              Invia commento
-            </button>
-
-            {submitted && (
-              <span className="text-sm text-[#22d3ee]">Commento inviato.</span>
-            )}
-          </div>
-        </form>
-      </div>
-    </section>
-  );
-}
 
 function Footer() {
   return (
