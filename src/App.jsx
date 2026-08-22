@@ -485,37 +485,52 @@ function Counter({ from, to }) {
 }
 
 function Services() {
-  const srv = [
-    { icon: Code2, number: "01", title: "Sviluppo Frontend", desc: "Interfacce pixel-perfect, accessibili e animate per dare valore immediato al tuo brand." },
-    { icon: Server, number: "02", title: "Logica Backend", desc: "Architetture solide, database e API RESTful che supportano il tuo prodotto senza frizioni." },
-    { icon: Gauge, number: "03", title: "Ottimizzazione", desc: "Performance, usabilità e velocità di caricamento pensate per migliorare esperienza e conversione." }
-  ];
-
   return (
-    <section id="servizi" className="py-32 px-6 max-w-6xl mx-auto">
-      <SectionHeader title="Expertise" subtitle="Servizi" />
-      <p className="mt-6 max-w-2xl text-[#8f8fa3] text-base leading-relaxed">
-        Mi occupo di trasformare idee, brand e obiettivi in esperienze digitali chiare, efficaci e facili da usare.
-      </p>
-      <div className="mt-16 grid md:grid-cols-3 gap-6">
-        {srv.map((s, i) => (
-          <TiltCard key={i} delay={i * 0.1}>
-            <div className="group relative h-full overflow-hidden rounded-2xl border border-[#1e1e26] bg-[#0d0d13] p-8 transition-all duration-300 hover:border-[#8b5cf6]/60 hover:shadow-[0_18px_50px_rgba(108,92,231,0.15)] glass-panel hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#8b5cf6]/12 via-transparent to-[#22d3ee]/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative z-10">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#22d3ee]/30 bg-[#22d3ee]/6 text-[#22d3ee]">
-                    <s.icon size={24} />
-                  </div>
-                  <span className="font-code text-xs tracking-[0.25em] text-[#8f8fa3]">{s.number}</span>
-                </div>
-                <h3 className="mb-3 text-xl font-display font-semibold text-white">{s.title}</h3>
-                <div className="mb-5 h-px w-12 bg-gradient-to-r from-[#8b5cf6] to-[#22d3ee]" />
-                <p className="text-sm leading-relaxed text-[#8f8fa3]">{s.desc}</p>
-              </div>
-            </div>
-          </TiltCard>
-        ))}
+    <section id="servizi" className="py-24 px-4 max-w-7xl mx-auto">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">I Miei Servizi</h2>
+        <p className="text-lg text-white/60">Soluzioni digitali su misura per le tue esigenze.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        {/* Card 1: Web */}
+        <div className="flex flex-col p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:border-white/20">
+          <h3 className="text-2xl font-semibold text-white mb-4">Sviluppo Web</h3>
+          <p className="text-white/60 mb-8 flex-grow">Creazione di siti web e landing page veloci, responsive e dal design moderno utilizzando React e Tailwind CSS.</p>
+          <ul className="space-y-4 mb-8 text-sm text-white/70 font-medium">
+            <li className="flex items-center gap-3"><span className="text-blue-500">✓</span> Performance ottimizzate</li>
+            <li className="flex items-center gap-3"><span className="text-blue-500">✓</span> Design Responsive</li>
+            <li className="flex items-center gap-3"><span className="text-blue-500">✓</span> UI/UX curata nei dettagli</li>
+          </ul>
+          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="w-full py-3 px-4 rounded-xl border border-white/10 bg-transparent text-white font-semibold text-center transition-colors hover:bg-white hover:text-black">Contattami</a>
+        </div>
+
+        {/* Card 2: Mobile (Highlighted) */}
+        <div className="flex flex-col p-8 rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] hover:border-white/20 relative overflow-hidden">
+          {/* Top glow accent */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+          
+          <h3 className="text-2xl font-semibold text-white mb-4">Sviluppo Mobile</h3>
+          <p className="text-white/60 mb-8 flex-grow">Applicazioni mobile multipiattaforma fluide e performanti, realizzate con Flutter e gestione dati locale.</p>
+          <ul className="space-y-4 mb-8 text-sm text-white/70 font-medium">
+            <li className="flex items-center gap-3"><span className="text-purple-400">✓</span> App iOS e Android</li>
+            <li className="flex items-center gap-3"><span className="text-purple-400">✓</span> Archiviazione locale (Isar)</li>
+            <li className="flex items-center gap-3"><span className="text-purple-400">✓</span> Gestione di stato avanzata</li>
+          </ul>
+          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="w-full py-3 px-4 rounded-xl bg-white text-black font-bold text-center transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]">Contattami</a>
+        </div>
+
+        {/* Card 3: Backend & E-commerce */}
+        <div className="flex flex-col p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:border-white/20">
+          <h3 className="text-2xl font-semibold text-white mb-4">Soluzioni Backend</h3>
+          <p className="text-white/60 mb-8 flex-grow">Architetture solide per E-commerce e piattaforme dinamiche, sviluppate in Java con pattern architetturali sicuri.</p>
+          <ul className="space-y-4 mb-8 text-sm text-white/70 font-medium">
+            <li className="flex items-center gap-3"><span className="text-cyan-500">✓</span> Piattaforme E-commerce</li>
+            <li className="flex items-center gap-3"><span className="text-cyan-500">✓</span> Architettura Java e JSP</li>
+            <li className="flex items-center gap-3"><span className="text-cyan-500">✓</span> Gestione Database (DAO)</li>
+          </ul>
+          <a href="mailto:lucadomenico.chiappetta@gmail.com" className="w-full py-3 px-4 rounded-xl border border-white/10 bg-transparent text-white font-semibold text-center transition-colors hover:bg-white hover:text-black">Contattami</a>
+        </div>
       </div>
     </section>
   );
